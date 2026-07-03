@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: terra-engine
+Version: 0.1.0
+Summary: TERRA satellite credit scoring engine
+Requires-Python: >=3.12
+Requires-Dist: pystac-client
+Requires-Dist: rasterio
+Requires-Dist: numpy
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: httpx

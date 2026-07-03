@@ -1,0 +1,6 @@
+pystac-client
+rasterio
+numpy
+fastapi
+uvicorn
+httpx

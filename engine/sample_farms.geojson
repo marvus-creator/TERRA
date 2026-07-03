@@ -1,0 +1,35 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "farm-001", "name": "Mukamana Family Plot" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [30.074, -2.176], [30.075, -2.176], [30.075, -2.175], [30.074, -2.175], [30.074, -2.176]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "farm-002", "name": "Nkurunziza Hillside Field" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [30.086, -2.186], [30.087, -2.186], [30.087, -2.185], [30.086, -2.185], [30.086, -2.186]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "farm-003", "name": "Uwase Cooperative Parcel" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [30.094, -2.171], [30.095, -2.171], [30.095, -2.170], [30.094, -2.170], [30.094, -2.171]
+        ]]
+      }
+    }
+  ]
+}
