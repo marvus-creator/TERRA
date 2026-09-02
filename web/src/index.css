@@ -1,8 +1,36 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
+@theme {
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+  --color-cream: #f7f1e5;
+  --color-paper: #fcf9f2;
+  --color-sand: #efe6d3;
+  --color-sand-2: #e3d7bd;
+  --color-line: #d8ccb2;
+  --color-ink: #1f2416;
+  --color-olive: #2f3a1f;
+  --color-olive-2: #4b5a2e;
+  --color-olive-3: #77864f;
+  --color-muted: #6f6a57;
+  --color-terracotta: #c4622d;
+  --color-terracotta-2: #e0855a;
+  --color-terracotta-soft: #f5dfd0;
+  --color-ndvi-0: #7a4a1f;
+  --color-ndvi-1: #c98b3a;
+  --color-ndvi-2: #e6c94a;
+  --color-ndvi-3: #9cbf3a;
+  --color-ndvi-4: #3f8f3a;
+  --color-ndvi-5: #1c5c30;
+  --shadow-card: 0 1px 2px rgba(47, 58, 31, 0.06), 0 12px 32px -18px rgba(47, 58, 31, 0.35);
+  --shadow-float: 0 24px 60px -24px rgba(31, 36, 22, 0.45);
+  --ease-organic: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 :root {
-  color-scheme: dark;
+  color-scheme: light;
+  --ndvi-ramp: linear-gradient(90deg, #7a4a1f 0%, #c98b3a 22%, #e6c94a 45%, #9cbf3a 65%, #3f8f3a 84%, #1c5c30 100%);
 }
 
 html {
@@ -11,25 +39,180 @@ html {
 
 body {
   margin: 0;
-  background: #050807;
-  color: #e8f2ec;
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  background-color: var(--color-cream);
+  background-image:
+    radial-gradient(1200px 600px at 80% -10%, rgba(230, 201, 74, 0.16), transparent 60%),
+    radial-gradient(900px 500px at -10% 30%, rgba(196, 98, 45, 0.08), transparent 60%);
+  background-attachment: fixed;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(230, 201, 74, 0.55);
+  color: var(--color-ink);
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 96;
+  letter-spacing: -0.01em;
+}
+
+.ndvi-ramp {
+  background: var(--ndvi-ramp);
+}
+
+.ndvi-text {
+  background: var(--ndvi-ramp);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.paper {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+  box-shadow: var(--shadow-card);
+}
+
+.rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-line) 20%, var(--color-line) 80%, transparent);
+}
+
+.overline {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-olive-3);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 2px;
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
+
+@keyframes orbit {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-20%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(120%); opacity: 0; }
+}
+
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-sand) 0%, var(--color-sand-2) 50%, var(--color-sand) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+  border-radius: 10px;
+}
+
+.scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 22%;
+  background: linear-gradient(180deg, transparent, rgba(230, 201, 74, 0.35), rgba(255, 255, 255, 0.75), transparent);
+  animation: scan 4.5s var(--ease-organic) infinite;
+  pointer-events: none;
+}
+
+.pulse-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 2px solid var(--color-terracotta);
+  animation: pulse-ring 2.4s ease-out infinite;
 }
 
 .leaflet-container {
-  background: #050807;
+  background: var(--color-sand-2);
   font-family: inherit;
 }
 
 .leaflet-tooltip {
-  background: #0b1210;
-  border: 1px solid rgba(74, 222, 128, 0.3);
-  color: #e8f2ec;
+  background: var(--color-paper);
+  border: 1px solid var(--color-line);
+  color: var(--color-ink);
   border-radius: 10px;
   padding: 6px 10px;
+  box-shadow: var(--shadow-card);
+  font-size: 12px;
 }
 
 .leaflet-tooltip-top:before {
-  border-top-color: rgba(74, 222, 128, 0.3);
+  border-top-color: var(--color-line);
+}
+
+.leaflet-control-zoom a {
+  background: var(--color-paper);
+  color: var(--color-olive);
+  border-color: var(--color-line);
+}
+
+.leaflet-control-attribution {
+  background: rgba(252, 249, 242, 0.8);
+  color: var(--color-muted);
+  font-size: 10px;
+}
+
+.leaflet-bar {
+  border: 1px solid var(--color-line);
+  box-shadow: var(--shadow-card);
+}
+
+.recharts-cartesian-axis-tick text {
+  fill: var(--color-muted);
+}
+
+input[type="range"] {
+  accent-color: var(--color-terracotta);
+}
+
+input[type="checkbox"] {
+  accent-color: var(--color-olive);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

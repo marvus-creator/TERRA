@@ -1,4 +1,4 @@
-import type { Farm, FarmRegistration, OverlayMeta, Reading } from './types'
+import type { Farm, FarmRegistration, OverlayMeta, Reading, Stats } from './types'
 
 async function request<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, init)
@@ -21,6 +21,15 @@ export function fetchFarm(farmId: string): Promise<Farm> {
 export async function fetchTimeseries(farmId: string): Promise<Reading[]> {
   const data = await request<{ readings: Reading[] }>(`/api/farms/${farmId}/timeseries`)
   return data.readings
+}
+
+export async function fetchAllTimeseries(): Promise<Record<string, Reading[]>> {
+  const data = await request<{ farms: Record<string, Reading[]> }>('/api/timeseries')
+  return data.farms
+}
+
+export function fetchStats(): Promise<Stats> {
+  return request<Stats>('/api/stats')
 }
 
 export function registerFarm(payload: FarmRegistration): Promise<Farm> {

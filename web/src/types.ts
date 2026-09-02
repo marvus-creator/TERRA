@@ -41,6 +41,19 @@ export interface OverlayMeta {
   cloud_cover: number
 }
 
+export interface Stats {
+  farms: number
+  scored: number
+  analyzing: number
+  hectares: number
+  scenes: number
+  seasons: string[]
+  districts: string[]
+  average_score: number | null
+  latest_reading: string | null
+  overlay: OverlayMeta | null
+}
+
 export interface FarmRegistration {
   name: string
   owner: string

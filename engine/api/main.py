@@ -53,6 +53,55 @@ def register_farm(body: FarmRegistration, tasks: BackgroundTasks):
     return farm
 
 
+def polygon_hectares(geometry: dict[str, Any]) -> float:
+    import math
+
+    ring = geometry.get("coordinates", [[]])[0]
+    if len(ring) < 3:
+        return 0.0
+    lat0 = sum(p[1] for p in ring) / len(ring) * math.pi / 180
+    m_lat = 110540.0
+    m_lon = 111320.0 * math.cos(lat0)
+    total = 0.0
+    for i in range(len(ring)):
+        lon1, lat1 = ring[i][0], ring[i][1]
+        lon2, lat2 = ring[(i + 1) % len(ring)][0], ring[(i + 1) % len(ring)][1]
+        total += lon1 * m_lon * lat2 * m_lat - lon2 * m_lon * lat1 * m_lat
+    return abs(total / 2) / 10000
+
+
+@app.get("/api/stats")
+def stats():
+    farms = store.list_farms()
+    history = read_history()
+    scored = [f for f in farms if f.get("score")]
+    scores = [f["score"]["terra_score"] for f in scored]
+    districts = sorted({f.get("district", "") for f in farms if f.get("district")})
+    seasons = sorted({r["season"] for r in history if not r["season"].endswith("C")})
+    latest = max((r["date"] for r in history), default=None)
+    overlay = json.loads(OVERLAY_META.read_text(encoding="utf-8")) if OVERLAY_META.exists() else None
+    return {
+        "farms": len(farms),
+        "scored": len(scored),
+        "analyzing": sum(1 for f in farms if f.get("status") == "analyzing"),
+        "hectares": round(sum(polygon_hectares(f["geometry"]) for f in farms), 2),
+        "scenes": len(history),
+        "seasons": seasons,
+        "districts": districts,
+        "average_score": round(sum(scores) / len(scores)) if scores else None,
+        "latest_reading": latest,
+        "overlay": overlay,
+    }
+
+
+@app.get("/api/timeseries")
+def all_timeseries():
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for row in read_history():
+        grouped.setdefault(row["farm_id"], []).append(row)
+    return {"farms": grouped}
+
+
 @app.get("/api/farms/{farm_id}")
 def get_farm(farm_id: str):
     farm = store.get_farm(farm_id)
